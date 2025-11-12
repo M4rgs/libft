@@ -14,29 +14,32 @@
 
 int	ft_atoi(const char *str)
 {
-	size_t	i;
-	int		odd;
-	size_t	rzlt;
+	size_t				i;
+	int					sign;
+	unsigned long long	rzlt;
 
 	i = 0;
-	odd = 1;
+	sign = 1;
 	rzlt = 0;
 	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
 	if (str[i] == '+' || str[i] == '-')
 	{
 		if (str[i] == '-')
-			odd = odd * -1;
+			sign = -1;
 		i++;
 	}
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		rzlt = rzlt * 10 + (str[i] - 48);
-		if (rzlt > 9223372036854775807 && odd == -1)
-			return (0);
-		if (rzlt > 9223372036854775807 && odd == 1)
-			return (-1);
+		if (rzlt > (LLONG_MAX - (str[i] - '0')) / 10)
+		{
+			if (sign == 1)
+				return (-1);
+			else
+				return (0);
+		}
+		rzlt = rzlt * 10 + (str[i] - '0');
 		i++;
 	}
-	return (rzlt * odd);
+	return ((int)(rzlt * sign));
 }
